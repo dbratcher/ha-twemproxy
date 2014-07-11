@@ -1,0 +1,29 @@
+{
+  "name": "ha-twemproxy",
+  "version": "0.1.0",
+  "description": "Highly available Redis via multiple Twemproxy(Nutcracker) instances for Nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dbratcher/node-ha-twemproxy.git"
+  },
+  "keywords": [
+    "redis",
+    "twemproxy",
+    "high availability"
+  ],
+  "dependencies" : {
+    "redis" : "0.10.3",
+    "q" : "0.9.2"
+  },
+  "devDependencies" : {
+    "mocha" : "*",
+    "chai" : "*"
+  },
+  "author": "Drew Bratcher",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
