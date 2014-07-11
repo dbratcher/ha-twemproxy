@@ -2,7 +2,7 @@ var twemproxy = require('../');
 var expect = require('chai').expect;
 var redis = require('redis');
 
-describe('Redis HA TwemProxy tests', function() {
+describe('Redis HA TwemProxy tests that', function() {
 
     describe('initial connection', function() {
 
@@ -11,7 +11,7 @@ describe('Redis HA TwemProxy tests', function() {
             var redisClient = twemproxy.createClient(endpoints);
             redisClient.on('ready', function() {
                 expect(redisClient.host).to.equal('127.0.0.1');
-                expect(redisClient.port).to.equal("26380");
+                expect(redisClient.port).to.equal('26380');
                 done();
             });
         });
@@ -24,7 +24,7 @@ describe('Redis HA TwemProxy tests', function() {
             var redisClient = twemproxy.createClient(endpoints);
             redisClient.on('ready', function() {
                 expect(redisClient.host).to.equal('127.0.0.1');
-                expect(redisClient.port).to.equal(26380);
+                expect(redisClient.port).to.equal('26380');
                 done();
             });
         });
@@ -39,7 +39,7 @@ describe('Redis HA TwemProxy tests', function() {
             var redisClient = twemproxy.createClient(endpoints);
             redisClient.on('ready', function() {
                 expect(redisClient.host).to.equal('127.0.0.1');
-                expect(redisClient.port).to.equal("26380");
+                expect(redisClient.port).to.equal('26380');
                 done();
             });
         });

@@ -4,7 +4,7 @@
   "description": "Highly available Redis via multiple Twemproxy(Nutcracker) instances for Nodejs",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --reporter spec"
   },
   "repository": {
     "type": "git",

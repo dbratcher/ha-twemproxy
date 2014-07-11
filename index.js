@@ -20,6 +20,7 @@ function TwemProxy(endpoints) {
 TwemProxy.prototype.createClient = function(opts) {
 
     opts = opts || {};
+    opts.no_ready_check = true;
   
     var endpoints = this.endpoints;
 
@@ -85,47 +86,28 @@ TwemProxy.prototype.createClient = function(opts) {
         };
     }
 
-    resolveTwemProxyClient(endpoints, connectClient(resolveTwemProxyClient));       
+    resolveTwemProxyClient(endpoints, opts, connectClient(resolveTwemProxyClient));       
 
     return client;
 };
 
-function resolveClient() {
-    var _i, __slice = [].slice;
-
-    // The following just splits the arguments into the first argument (endpoints),
-    // the last argument (callback) and then any arguments in the middle (args).
-    var endpoints = arguments[0];
-    var checkEndpointFn = arguments[1];
-    var args = 4 <= arguments.length ? __slice.call(arguments, 2, _i = arguments.length - 1) : (_i = 2, []);
-    var callback = arguments[_i++];
-
+function resolveClient(endpoints, checkEndpointFn, options, callback) {
     var promise = Q.resolve();
 
-    // Because finding the master is going to be an async list we will terminate
-    // when we find one then use promises...
     promise = endpoints.reduce(function(soFar, endpoint) {
         return soFar.then(function() {
             var deferred = Q.defer();
-
-            // Farily illegible way of passing (endpoint, arg1, arg2, ..., callback)
-            // to checkEndpointFn
-            checkEndpointFn.apply(null, [endpoint].concat(args, [function() {
-                var err = arguments[0];
+          
+            checkEndpointFn(endpoint, options, function(err, host, port) {
                 if (err) {
                     deferred.resolve();
                 } else {
-                    // This is the endpoint that has responded so stick it on the top of
-                    // the list
                     var index = endpoints.indexOf(endpoint);
                     endpoints.splice(index, 1);
                     endpoints.unshift(endpoint);
-
-                    // Callback with whatever other arguments we've been given
-                    var _args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-                    callback.apply(null, [null].concat(_args));
+                    callback(null, host, port);
                 }
-            }]));
+            });
             return deferred.promise;
         });
     }, promise);
@@ -138,8 +120,8 @@ function resolveClient() {
     promise.fail(function(err) { callback(err); });
 }
 
-function isTwemProxyOk(endpoint, callback) {
-    var client = redis.createClient(endpoint.port, endpoint.host);
+function isTwemProxyOk(endpoint, options, callback) {
+    var client = redis.createClient(endpoint.port, endpoint.host, options);
     var callbackSent = false;
     client.on("error", function(err) {
         if (!callbackSent) {
@@ -156,12 +138,11 @@ function isTwemProxyOk(endpoint, callback) {
         if (err) { return callback(err); }
         callback(null, endpoint.host, String(endpoint.port));
     });
-    client.quit();
 }
 
 
-function resolveTwemProxyClient(endpoints, masterName, callback) {
-    resolveClient(endpoints, isTwemProxyOk, callback);
+function resolveTwemProxyClient(endpoints, options, callback) {
+    resolveClient(endpoints, isTwemProxyOk, options, callback);
 }
 
 // Shortcut for quickly getting a client from endpoints
