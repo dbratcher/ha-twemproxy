@@ -1,7 +1,13 @@
-node-ha-twemproxy
-===================
+Highly Available Redis TwemProxy
+================================
 
 Wrapper around [node_redis](https://github.com/mranney/node_redis) creating a client pointing at a twemproxy instance which autoupdates if the current twemproxy instance goes down.
+
+## Installation ##
+
+  npm install ha-twemproxy --save
+  
+## Usage ##
 
 ```javascript
 var twemproxy = require('ha-twemproxy');
@@ -25,6 +31,10 @@ var redisClient = twemproxy.createClient(endpoints, opts);
 var TwemProxy = twemproxy.TwemProxy(endpoints);
 var masterClient = TwemProxy.createClient(opts);
 ```
+
+
+## Tests ##
+npm test
 
 ## Licence ##
 MIT
